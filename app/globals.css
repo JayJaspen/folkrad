@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  body {
+    @apply font-body text-navy bg-light-bg;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gold hover:bg-gold-dark text-white font-semibold py-3 px-6 rounded-lg 
+           transition-all duration-300 shadow-soft hover:shadow-strong
+           inline-flex items-center justify-center gap-2;
+  }
+
+  .btn-secondary {
+    @apply bg-navy hover:bg-navy-light text-white font-semibold py-3 px-6 rounded-lg 
+           transition-all duration-300 shadow-soft hover:shadow-strong
+           inline-flex items-center justify-center gap-2;
+  }
+
+  .btn-outline {
+    @apply border-2 border-gold text-gold hover:bg-gold hover:text-white 
+           font-semibold py-3 px-6 rounded-lg transition-all duration-300
+           inline-flex items-center justify-center gap-2;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-soft p-6 border border-gray-100;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-200 rounded-lg 
+           focus:ring-2 focus:ring-gold/50 focus:border-gold 
+           outline-none transition-all duration-200
+           font-body text-navy placeholder:text-gray-400;
+  }
+
+  .label {
+    @apply block text-sm font-semibold text-navy mb-1.5;
+  }
+
+  .nav-link {
+    @apply text-gray-300 hover:text-gold transition-colors duration-200 font-medium;
+  }
+
+  .nav-link-active {
+    @apply text-gold;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-gold {
+    @apply badge bg-gold/10 text-gold;
+  }
+
+  .badge-success {
+    @apply badge bg-emerald-50 text-emerald-600;
+  }
+
+  .badge-danger {
+    @apply badge bg-red-50 text-red-600;
+  }
+
+  .section-title {
+    @apply font-display text-3xl md:text-4xl font-bold text-navy text-center;
+  }
+
+  .section-subtitle {
+    @apply text-gray-500 text-center mt-2 max-w-2xl mx-auto;
+  }
+}
