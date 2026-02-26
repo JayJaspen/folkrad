@@ -1,99 +1,116 @@
-# Folkrådet - Demokratisk Dialog
+# Folkrådet — Sveriges digitala folkröst
 
-En politiskt neutral plattform för demokratisk dialog, byggd med Next.js och Supabase.
+## 🚀 Deploy till Vercel (steg för steg)
 
-## 🚀 Kom igång
-
-### 1. Skapa Supabase-projekt
-
-1. Gå till [supabase.com](https://supabase.com) och skapa ett nytt projekt
-2. Kopiera din **Project URL** och **anon public key** från Settings → API
-3. Kör SQL-schemat i Supabase SQL Editor:
-   - Öppna `supabase-schema.sql` och kör hela filen i SQL Editor
-
-### 2. Konfigurera miljövariabler
-
+### 1. Skapa Git-repo
 ```bash
-cp .env.local.example .env.local
+cd folkradet
+git init
+git add .
+git commit -m "Initial: grundstomme med auth"
 ```
 
-Fyll i dina Supabase-uppgifter i `.env.local`
-
-### 3. Installera och kör
-
+Pusha till GitHub (skapa ett repo på github.com först):
 ```bash
-npm install
-npm run dev
+git remote add origin https://github.com/DITT-ANVÄNDARNAMN/folkradet.git
+git branch -M main
+git push -u origin main
 ```
 
-Öppna [http://localhost:3000](http://localhost:3000)
+### 2. Koppla till Vercel
+1. Gå till [vercel.com](https://vercel.com) → **New Project**
+2. Importera ditt GitHub-repo **folkradet**
+3. Klicka **Deploy** (det kommer misslyckas första gången — det är OK)
 
-### 4. Skapa admin-användare
+### 3. Lägg till Vercel Postgres
+1. I Vercel-dashboarden → ditt projekt → **Storage** → **Create Database**
+2. Välj **Postgres** → skapa
+3. Vercel sätter automatiskt alla `POSTGRES_*` environment variables
 
-1. Registrera ett konto via `/register`
-2. Kör i Supabase SQL Editor:
-```sql
-UPDATE profiles SET role = 'admin' WHERE email = 'din-admin@epost.se';
+### 4. Lägg till environment variables
+Gå till **Settings** → **Environment Variables** och lägg till:
+
+| Key | Value |
+|-----|-------|
+| `JWT_SECRET` | Generera med: `openssl rand -hex 32` |
+| `ELKS_API_USERNAME` | Från [46elks.com/account](https://46elks.com/account) |
+| `ELKS_API_PASSWORD` | Från [46elks.com/account](https://46elks.com/account) |
+
+### 5. Redeploy
+Klicka **Deployments** → senaste → **⋯** → **Redeploy**
+
+### 6. Skapa databastabeller
+Besök:
 ```
+https://din-app.vercel.app/api/setup
+```
+Du bör se: `"Alla tabeller skapade! Admin-konto: admin@folkradet.se / admin123"`
 
-### 5. Deploy till Vercel
+### 7. Koppla din domän
+1. I Vercel → **Settings** → **Domains** → lägg till `folkradet.se` och `www.folkradet.se`
+2. På [one.com](https://one.com) → DNS-inställningar:
+   - Ta bort befintliga A-records
+   - Lägg till CNAME: `www` → `cname.vercel-dns.com`
+   - Lägg till A-record: `@` → `76.76.21.21`
 
-1. Pusha koden till GitHub
-2. Importera projektet i [Vercel](https://vercel.com)
-3. Lägg till miljövariabler i Vercel (Settings → Environment Variables)
-4. Deploy!
+### 8. Logga in som admin
+- **E-post:** admin@folkradet.se
+- **Lösenord:** admin123
+- ⚠️ **Byt lösenord direkt!**
+
+---
 
 ## 📁 Projektstruktur
 
 ```
 folkradet/
 ├── app/
-│   ├── layout.tsx          # Root layout med Navbar
-│   ├── page.tsx            # Startsida (Veckans Fråga + Partisympati)
-│   ├── globals.css         # Tailwind + design system
-│   ├── (auth)/
-│   │   ├── login/page.tsx  # Inloggning
-│   │   └── register/page.tsx # Registrering
-│   ├── admin/page.tsx      # Admin-panel
-│   ├── arkiv/page.tsx      # Arkiv med filter
-│   ├── om-oss/page.tsx     # Om Folkrådet
-│   └── kontakt/page.tsx    # Kontaktformulär
-├── components/
-│   ├── layout/
-│   │   ├── Navbar.tsx      # Navigation
-│   │   └── AuthProvider.tsx # Auth context
+│   ├── globals.css          ← Global styling
+│   ├── layout.tsx           ← Root layout
+│   ├── page.tsx             ← Landningssida (login/register)
 │   ├── admin/
-│   │   ├── AdminQuestions.tsx
-│   │   ├── AdminUsers.tsx
-│   │   ├── AdminSuggestions.tsx
-│   │   └── AdminStats.tsx
-│   ├── HeroSection.tsx
-│   ├── WeekQuestionCard.tsx
-│   └── PartyPreference.tsx
+│   │   ├── layout.tsx       ← Auth-guard för admin
+│   │   └── page.tsx         ← Admin-panel (byggs i steg 2)
+│   ├── dashboard/
+│   │   ├── layout.tsx       ← Auth-guard för användare
+│   │   └── page.tsx         ← Användardashboard (byggs i steg 3)
+│   └── api/
+│       ├── setup/route.ts   ← Databasuppställning (kör en gång)
+│       ├── logout/route.ts
+│       └── auth/
+│           ├── login/route.ts
+│           ├── register/route.ts
+│           └── verify-sms/route.ts
 ├── lib/
-│   ├── supabase-browser.ts # Client-side Supabase
-│   ├── supabase-server.ts  # Server-side Supabase
-│   └── supabase-middleware.ts
-├── types/index.ts          # TypeScript typer
-├── middleware.ts            # Auth middleware
-└── supabase-schema.sql     # Databasschema
+│   ├── db.ts                ← Databaskonstanter
+│   ├── auth.ts              ← JWT-helpers
+│   └── sms.ts               ← 46elks SMS
+├── .env.example
+└── README.md
 ```
 
-## 🎨 Design
+## 🔧 Lokal utveckling
 
-- **Navy:** #0f172a (primär)
-- **Guld:** #c9a961 (accent)
-- **Font Display:** Cormorant Garamond
-- **Font Body:** Montserrat
+```bash
+npm install
+# Kopiera .env.example till .env.local och fyll i dina värden
+cp .env.example .env.local
+npm run dev
+```
 
-## ✅ Funktioner
+**OBS:** Utan 46elks-uppgifter loggas SMS-koder till terminalen istället.
 
-- [x] Användarregistrering & inloggning (Supabase Auth)
-- [x] Veckans Fråga (flerval + öppna frågor)
-- [x] Partisympatier med statistik
-- [x] Admin-panel (frågor, användare, förslag, statistik)
-- [x] Arkiv med filtrering (kön, ålder, län)
-- [x] Kontaktformulär
-- [x] Om Folkrådet
+## ✅ Vad som ingår (Steg 1)
+- [x] Next.js 14 med TypeScript
+- [x] Vercel Postgres databasschema (alla 5 tabeller)
+- [x] Landningssida med registrering och inloggning
+- [x] SMS-verifiering via 46elks
+- [x] JWT-baserad autentisering med httpOnly cookies
+- [x] Skyddade routes för admin och användare
+- [x] Annonsbanners på landningssidan
 - [x] Responsiv design
-- [x] Skyddade admin-routes via middleware
+
+## 🔜 Nästa steg
+- Steg 2: Admin-panelen (Veckans fråga, Historik, Väljarbarometer, Användare)
+- Steg 3: Användar-dashboarden (Hem, Väljarbarometer, Arkiv, Min sida)
+- Steg 4: Diagram, PDF-export, partiomröstning

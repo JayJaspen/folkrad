@@ -1,6 +1,6 @@
 'use client';
 
-export default function AdminPage() {
+export default function DashboardPage() {
   const handleLogout = async () => {
     await fetch('/api/logout', { method: 'POST' });
     window.location.href = '/';
@@ -22,7 +22,7 @@ export default function AdminPage() {
             fontFamily: 'var(--font-display)',
           }}>F</div>
           <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', color: '#c5a247' }}>
-            Folkrådet <span style={{ fontSize: '.75rem', color: 'rgba(255,255,255,.4)', fontFamily: 'var(--font-body)' }}>Admin</span>
+            Folkrådet
           </span>
         </div>
         <button className="btn btn-outline-light" style={{ fontSize: '.8rem', padding: '.4rem .9rem' }}
@@ -31,10 +31,10 @@ export default function AdminPage() {
 
       <div style={{ maxWidth: 900, margin: '3rem auto', textAlign: 'center', padding: '0 1rem' }}>
         <h2 style={{ fontFamily: 'var(--font-display)', color: 'var(--navy)', marginBottom: '1rem' }}>
-          Admin-panel
+          Välkommen!
         </h2>
         <p style={{ color: 'var(--text-muted)' }}>
-          🏗️ Admin-panelen byggs i nästa steg. Inloggningen fungerar!
+          🏗️ Användar-dashboarden byggs i nästa steg. Inloggningen fungerar!
         </p>
       </div>
     </div>

@@ -1,26 +1,20 @@
-import type { Metadata } from 'next'
-import './globals.css'
-import { Navbar } from '@/components/layout/Navbar'
-import { AuthProvider } from '@/components/layout/AuthProvider'
+import './globals.css';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Folkrådet - Demokratisk Dialog',
-  description: 'En politiskt neutral tjänst för demokratisk dialog. Din röst, din åsikt.',
-}
+  title: 'Folkrådet — Sveriges digitala folkröst',
+  description: 'Delta i veckans viktigaste frågor och följ Sveriges politiska puls.',
+};
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sv">
-      <body className="min-h-screen bg-light-bg font-body">
-        <AuthProvider>
-          <Navbar />
-          <main>{children}</main>
-        </AuthProvider>
-      </body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
+      <body>{children}</body>
     </html>
-  )
+  );
 }
